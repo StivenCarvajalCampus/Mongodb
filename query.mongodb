@@ -490,6 +490,8 @@ db.alquiler.find({ID_Alquiler:30},{Costo_Total:1})
 
 //Filtrar cliente por Dni
 db.cliente.find({DNI:"00523821F"});
-*/
+
 //Mostrar todos los automoviles con una capacidad mayor a 5 personas
 db.automovil.find({Capacidad: {$gte:5} }, {_id:0})
+*/
+db.alquiler.find({Fecha_Inicio:'2023-07-05'},{_id:0})

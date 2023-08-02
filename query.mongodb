@@ -457,7 +457,7 @@ db.alquiler.find({ID_Alquiler:30});
 
 //Consulta listar por cargo Vendedor
 db.empleado.find({Cargo:"Vendedor"})
-*/
+
 db.sucursal.aggregate([
     {
         $lookup: {
@@ -485,3 +485,5 @@ db.sucursal.aggregate([
         }
     },
 ])
+*/
+db.alquiler.find({ID_Alquiler:30},{Costo_Total:1})

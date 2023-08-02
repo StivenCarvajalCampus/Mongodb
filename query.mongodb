@@ -451,6 +451,8 @@ db.reserva.aggregate([
     }
 
 ])
-*/
+
 //consulta ID_Alquiler especifico
 db.alquiler.find({ID_Alquiler:30});
+*/
+db.empleado.find({Cargo:"Vendedor"})

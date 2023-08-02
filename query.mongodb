@@ -454,5 +454,34 @@ db.reserva.aggregate([
 
 //consulta ID_Alquiler especifico
 db.alquiler.find({ID_Alquiler:30});
-*/
+
+//Consulta listar por cargo Vendedor
 db.empleado.find({Cargo:"Vendedor"})
+*/
+db.sucursal.aggregate([
+    {
+        $lookup: {
+          from: "sucursal_automovil",
+          localField: "ID_Sucursal",
+          foreignField: "ID_Sucursal",
+          as: "Sucursal_fk",
+        }
+    },
+    {
+        $unwind: "$Sucursal_fk",
+    },
+    {
+        $group: {
+            _id:"$Sucursal_fk.ID_Sucursal",
+            total:{ $sum: "$Sucursal_fk.Cantidad_Disponible"},
+        }
+    },
+    {
+        $project: {
+            "_id": 0,
+            "ID_Sucursal": "$_id",
+            "Nombre": 1,
+            "total_automoviles": "$total",
+        }
+    },
+])

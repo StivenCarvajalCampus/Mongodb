@@ -493,5 +493,9 @@ db.cliente.find({DNI:"00523821F"});
 
 //Mostrar todos los automoviles con una capacidad mayor a 5 personas
 db.automovil.find({Capacidad: {$gte:5} }, {_id:0})
-*/
+//obtener los detalles del al quiler con fecha de inicio
 db.alquiler.find({Fecha_Inicio:'2023-07-05'},{_id:0})
+
+//Listar reservas por cliente especifico
+db.reserva.find({ID_Cliente:123},{Estado:"Pendiente"})
+*/

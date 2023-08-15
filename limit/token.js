@@ -1,22 +1,26 @@
 import 'reflect-metadata';
 import {plainToClass, classToPlain } from 'class-transformer';
 import dotenv from 'dotenv';
+import {Alquiler} from "../dtocontroller/alquiler.js"
 import {Router} from 'express';
 import { SignJWT, jwtVerify } from 'jose';
-import {User} from "../routers/storage/usuario.js";
 
+dotenv.config("../");
+
+const appToken = Router();
+const appVerify= Router();
 const DTO = (p1)=>{
     const match = {
-        'User':User
+        'Alquiler':Alquiler,
     };
     const inst = match[p1];
-    return (inst) ? plainToClass(inst, {}, {ignoreDecorators: true}): undefined;
+    if(!inst) throw {status:404, message:"Token solicitado no es valido"}
+    return {atributos: plainToClass(inst,{},{ignoreDecorators:true}),class:inst}
 };
-
 
 appToken.use("/:collection", async(req,res)=>{
     try {
-        let inst =  plainToClass(eval(req.params.collecion), {}, { ignoreDecorators: true })
+        let inst =  plainToClass(eval(req.params.collection), {}, { ignoreDecorators: true })
         if(!inst){
             res.status(404).send({status:404, message:"Token no valido"});
             return
@@ -28,12 +32,11 @@ appToken.use("/:collection", async(req,res)=>{
         .setIssuedAt()
         .setExpirationTime("30m")
         .sign(encoder.encode(process.env.JWT_PRIVATE_KEY));
-        req.data = jwt;
-        res.status(201).send({status: 201, message: jwt});
-    } catch (error) {
+        res.status(201).send({status:201,jwt});
+        } catch (error) {
         res.status(404).send({status: 404, message: "Token solicitado no valido"});
     }
-})
+});
 
 appVerify.use("/", async(req,res,next)=>{
     const {authorization} = req.headers;
@@ -53,5 +56,6 @@ appVerify.use("/", async(req,res,next)=>{
 
 export {
     appToken,
-    appVerify
+    appVerify,
+    DTO
 };

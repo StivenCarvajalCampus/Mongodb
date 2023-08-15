@@ -1,6 +1,6 @@
 //INSERT SUCURSAL
 use ("db_campus_alquiler");
-/*
+
 db.sucursal.insertMany([{
  ID_Sucursal:1,
  Nombre:"Sucursal A",
@@ -169,9 +169,9 @@ db.reserva.insertMany([
     }
 ])
  
-*/
+
 //INSERT ALQUILER
-/*
+
 db.alquiler.insertMany([
     {
         ID_Alquiler:30,
@@ -219,7 +219,7 @@ db.alquiler.insertMany([
         Estado:"Activo"
     }
 ]) 
-/*
+
 db.cliente.insertMany([
     {
         ID_Cliente:123,
@@ -407,10 +407,10 @@ db.empleado.insertMany([
         Cargo:"Administrativo"
     }
 ])
-*/
+
 //db.empleado.find();
 //db.alquiler.find({"Estado":"Disponible"});
-/*
+
 db.getCollection("cliente").aggregate([
     {
         $lookup: {
@@ -453,6 +453,7 @@ db.reserva.aggregate([
 ])
 
 //consulta ID_Alquiler especifico
+use("db_campus_alquiler")
 db.alquiler.find({ID_Alquiler:30});
 
 //Consulta listar por cargo Vendedor
@@ -498,4 +499,29 @@ db.alquiler.find({Fecha_Inicio:'2023-07-05'},{_id:0})
 
 //Listar reservas por cliente especifico
 db.reserva.find({ID_Cliente:123},{Estado:"Pendiente"})
-*/
+
+
+use("db_campus_alquiler")
+db.alquiler.aggregate ([
+    {
+        $match: {
+            Estado:"Activo",
+        },
+    },
+    {
+        $lookup: {
+            from: "cliente",
+            localField: "ID_Cliente_id",
+            foreignField:"ID_Cliente",
+            as: "Cliente_Info",
+        },
+    },
+    {
+        $project: {
+            _id:1,
+            "Cliente_Info.id":0,
+            "Cliente_Info.ID_Cliente":0,
+        },
+    },
+
+])

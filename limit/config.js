@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-export let limitGrt = ()=>{
+export let configGet = ()=>{
     return rateLimit({
         windowMs: 30 * 1000,
         max: 5,

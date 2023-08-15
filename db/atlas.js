@@ -9,10 +9,9 @@ export async function conex(){
             useNewUrlParser: true,
             useUnifiedTopology:true,
         };
-        const client =await MongoClient.connect(uri, options);
+        const client = await MongoClient.connect(uri, options);
+        console.log("db -> success")
         return client.db();
-
-
     } catch (error) {
         return {status: 500, message:error.message}
     }

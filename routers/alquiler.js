@@ -1,46 +1,22 @@
 import { Router } from "express";
-import { atlas } from "../db/atlas.js";
+import { conex } from "../db/atlas.js";
 import { configGet } from "../limit/config.js";
 
-const storageAlquiler = Router();
-const db = await atlas();
-storageAlquiler.use(configGet());
+const appAlquiler = Router();
 
-storageAlquiler.get("/", async (req, res)=>{
+appAlquiler.get("/", async (req, res)=>{
     try {
-        const collection = atlas.collection("alquiler");
-        const data =await collection
-        .aggregate ([
-            {
-                $match: {
-                    Estado:"Activo",
-                },
-            },
-            {
-                $lookup: {
-                    from: "cliente",
-                    localField: "ID_Cliente_id",
-                    foreignField:"ID_Cliente",
-                    as: "Cliente_Info",
-                },
-            },
-            {
-                $project: {
-                    _id:0,
-                    "Cliente_Info.id":0,
-                    "Cliente_Info.ID_Cliente":0,
-                },
-            },
-
-        ])
-        .toArray();
+        const db = await conex();
+        const collection = await db.collection("alquiler");
+        const data = await collection.find({}).toArray();
+        res.send(data);
     } catch (error) {
-        
-    }
+        console.log(error)
+    }   
 });
 
 
-storageAlquiler.get("/detallesid", async(req,res)=>{
+appAlquiler.get("/detallesid", async(req,res)=>{
     try {
         let{ id } = req.query;
         id = parseInt(id);
@@ -77,7 +53,7 @@ storageAlquiler.get("/detallesid", async(req,res)=>{
             },
             {
                 $project: {
-                    _id: 0,
+                    _id: 1,
                     "Client_Info._id":0,
                     "Automovil_Info._id":0,
                     "Cliente_Info.ID_Cliente":0,
@@ -92,3 +68,30 @@ storageAlquiler.get("/detallesid", async(req,res)=>{
         
     }
 })
+export default appAlquiler;
+
+
+
+        // const data = await collection.aggregate([
+        //     {
+        //         $match: {
+        //             Estado:"Activo",
+        //         },
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: "cliente",
+        //             localField: "ID_Cliente_id",
+        //             foreignField:"ID_Cliente",
+        //             as: "Cliente_Info",
+        //         },
+        //     },
+        //     {
+        //         $project: {
+        //             _id:1,
+        //             "Cliente_Info.id":0,
+        //             "Cliente_Info.ID_Cliente":0,
+        //         },
+        //     },
+
+        // ]).toArray();

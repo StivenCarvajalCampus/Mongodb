@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import {plainToClass, classToPlain } from 'class-transformer';
 import dotenv from 'dotenv';
 import {Alquiler} from "../dtocontroller/alquiler.js"
+import {Automovil} from "../dtocontroller/automovil.js"
 import {Router} from 'express';
 import { SignJWT, jwtVerify } from 'jose';
 
@@ -12,6 +13,7 @@ const appVerify= Router();
 const DTO = (p1)=>{
     const match = {
         'Alquiler':Alquiler,
+        'automovil': Automovil,
     };
     const inst = match[p1];
     if(!inst) throw {status:404, message:"Token solicitado no es valido"}
